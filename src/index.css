@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: -webkit-fill-available;
+}
+html,#root {
+  height: -webkit-fill-available;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.error label,.error .MuiButtonBase-root{
+  color:#d32f2f;
+}
+
+
+#marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background:url(https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/256/Map-Marker-Marker-Outside-Azure.png) no-repeat top center;
+  background-size:100%;
+  opacity: 1;
+  cursor: move;
+}
