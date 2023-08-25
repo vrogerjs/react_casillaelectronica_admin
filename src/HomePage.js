@@ -95,12 +95,12 @@ const HomePage = ({ logOut, match }) => {
 
   const items = [
     {
-      perms: 'ADMIN_ALERTAS_AMBER', text: 'Notificación', icon: <ForwardToInboxIcon />, path: '/notificacion', items: [
+      perms: 'admin_casillaelectronica', text: 'Notificación', icon: <ForwardToInboxIcon />, path: '/notificacion', items: [
         { text: 'Registro', icon: <MarkEmailReadIcon />, path: '/notificacion/create' },
         { text: 'Listado', icon: <MailOutline />, path: '/notificacion' },
       ]
     }, {
-      perms: 'ADMIN_ALERTAS_AMBER', text: 'Bandeja', icon: <MailOutline />, path: '/bandeja', items: [
+      perms: 'casillaelectronica', text: 'Bandeja', icon: <MailOutline />, path: '/bandeja', items: [
         { text: 'Pendientes', icon: <MailIcon />, path: '/bandeja/pendiente' },
         { text: 'Destacados', icon: <Star />, path: '/bandeja/destacado' },
         { text: 'Archivados', icon: <MoveToInbox />, path: '/bandeja/archivado' },
