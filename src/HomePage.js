@@ -81,7 +81,7 @@ function VAppBar(props) {
 
 const HomePage = ({ logOut, match }) => {
 
-  const setO = React.useState({ title: 'Cuestionarios Discapacidad' })[1];
+  const setO = React.useState({ title: 'Casilla Electronica' })[1];
 
   const [perms, setPerms] = React.useState([]);
 
