@@ -100,7 +100,7 @@ const HomePage = ({ logOut, match }) => {
         { text: 'Listado', icon: <MailOutline />, path: '/notificacion' },
       ]
     }, {
-      perms: 'casillaelectronica', text: 'Bandeja', icon: <MailOutline />, path: '/bandeja', items: [
+      perms: 'casillaelectronica', text: 'Bandeja', icon: <MailOutline />, path: '/bandeja/pendiente', items: [
         { text: 'Pendientes', icon: <MailIcon />, path: '/bandeja/pendiente' },
         { text: 'Destacados', icon: <Star />, path: '/bandeja/destacado' },
         { text: 'Archivados', icon: <MoveToInbox />, path: '/bandeja/archivado' },
@@ -217,12 +217,6 @@ const HomePage = ({ logOut, match }) => {
 
   // Ver mensaje
   const NotificacionListmensaje = lazyLoader(() => import('./screens/notificacion/Listmensaje'));
-
-  // Desaparecido
-  const DesaparecidoList = lazyLoader(() => import('./screens/desaparecido/List'));
-  const DesaparecidoForm = lazyLoader(() => import('./screens/desaparecido/Form')
-    .then(module => ({ default: module.Form }))
-  );
 
   return (
     <Box

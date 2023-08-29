@@ -134,7 +134,7 @@ const List = () => {
   }, [height, width]);
 
   useEffect(() => {
-    dispatch({ type: 'title', title: 'Notificaciones Archivados' });
+    dispatch({ type: 'title', title: 'Notificaciones Archivadas' });
     fetchData(state.page)
   }, [state.page, state.rowsPerPage]);
 

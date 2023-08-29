@@ -117,7 +117,7 @@ const List = () => {
   }, [height, width]);
 
   useEffect(() => {
-    dispatch({ type: 'title', title: 'Gestión de Desaparecidos' });
+    dispatch({ type: 'title', title: 'Bandeja de Notificaciones' });
     fetchData(state.page)
   }, [state.page, state.rowsPerPage]);
 
