@@ -130,7 +130,13 @@ const List = () => {
   const [o, { defaultProps }] = useFormState(useState, {}, {});
 
   const verNotificacionOnClick = () => {
-    navigate('/notificacion/ver/' + selected[0]);
+    http.get(process.env.REACT_APP_PATH + '/notificacion/' + selected[0]).then((result) => {
+      if (result.horaRecepcion) {
+        navigate('/notificacion/ver/' + selected[0]);
+      } else {
+        onClickAceptar();
+      }
+    });
   }
 
   const onClickDestacar = () => {
@@ -153,6 +159,26 @@ const List = () => {
           http.get(process.env.REACT_APP_PATH + '/notificacion/change/' + selected[0] + '?estado=3').then(e => {
             navigate('/bandeja/pendiente');
             dispatch({ type: "snack", msg: 'Notificación archivada.!' });
+          });
+        }
+      }
+    });
+  };
+
+
+  const onClickAceptar = () => {
+    dispatch({
+      type: "confirm", msg: 'Desea aceptar la notificación seleccionada?', cb: (e) => {
+        if (e) {
+
+          const currentTime = new Date();
+          const hours = currentTime.getHours();
+          const minutes = currentTime.getMinutes();
+          const seconds = currentTime.getSeconds();
+          const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+          http.get(process.env.REACT_APP_PATH + '/notificacion/recepcion/' + selected[0] + '?horaRecepcion=' + formattedTime).then(e => {
+            navigate('/notificacion/ver/' + selected[0]);
           });
         }
       }
@@ -244,11 +270,18 @@ const List = () => {
                           <br></br>
                           {row.horaEmision}
                         </TableCell>
-                        <TableCell style={{ minWidth: '10%', maxWidth: '10%' }} className='border-table text-center'>
-                          <a href={`https://web.regionancash.gob.pe/fs/temp/${row.urlDocumento}`} target="_blank" rel="noopener noreferrer">
-                            <InsertDriveFile />
-                          </a>
-                        </TableCell>
+
+                        {row.horaRecepcion === null ? (
+                          <TableCell style={{ minWidth: '10%', maxWidth: '10%' }} className='border-table text-center'>
+                            <Button sx={{ width: '50%', fontWeight: 'bold' }} disabled={!selected.length} onClick={onClickAceptar} startIcon={<MoveToInbox />} variant="contained" color="primary">Aceptar</Button>
+                          </TableCell>
+                        ) : (
+                          <TableCell style={{ minWidth: '10%', maxWidth: '10%' }} className='border-table text-center'>
+                            <a href={`https://web.regionancash.gob.pe/fs/temp/${row.urlDocumento}`} target="_blank" rel="noopener noreferrer">
+                              <InsertDriveFile />
+                            </a>
+                          </TableCell>
+                        )}
 
                       </StyledTableRow >
                     );
