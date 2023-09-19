@@ -274,6 +274,7 @@ const HomePage = ({ logOut, match }) => {
         <Routes>
 
           {/* Notificación */}
+          <Route path={`/`} element={<NotificacionList setO={setO} />} />
           <Route path={`/notificacion`} element={<NotificacionList setO={setO} />} />
           <Route path={`/notificacion/create`} element={<NotificacionForm />} />
           <Route path={`/notificacion/:pid/edit`} element={<NotificacionForm />} />
