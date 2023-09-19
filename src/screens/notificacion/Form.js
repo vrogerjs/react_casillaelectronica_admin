@@ -3,15 +3,15 @@ import { useFormState, useResize, http } from 'gra-react-utils';
 import { db } from '../../db';
 import { Send as SendIcon, Add as AddIcon, Keyboard } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Box, Button, Card, CardContent, Fab, MenuItem, Stack, InputAdornment, TextField, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Fab, MenuItem, Stack, InputAdornment, TextField, Grid, Typography, InputLabel } from '@mui/material';
 import FileUpload from "react-material-file-upload";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Select from '@mui/material/Select';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import moment from 'moment';
+import Select from 'react-select';
 
 export const Form = () => {
 
@@ -33,6 +33,10 @@ export const Form = () => {
 
   const pad = (num, places) => String(num).padStart(places, '0')
 
+  const [selectedDependencia, setSelectedDependencia] = useState(null);
+
+  const [selectedPersona, setSelectedPersona] = useState(null);
+
   const [o, { defaultProps, handleChange, bindEvents, validate, set }] = useFormState(useState, {
     hola: "hola"
   }, {});
@@ -51,6 +55,17 @@ export const Form = () => {
           console.log(JSON.stringify(result));
           result.fechaHoraNotificacion = result.fechaRegistro + ' ' + result.horaEmision;
           set(result);
+
+          setSelectedDependencia({
+            value: result.dependencia.id,
+            label: result.dependencia.name,
+          });
+
+          setSelectedPersona({
+            value: result.persona.id,
+            label: result.persona.apellidoNombre,
+          });
+
         });
       }
     }
@@ -89,25 +104,36 @@ export const Form = () => {
     navigate(-1);
   }
 
-  const onChangeDependencia = (event) => {
-    var dep = dependencias.find((e) => o.dependencia.id == e.id);
-    o.dependencia = {
-      id: dep.id,
-      name: dep.fullName,
-      abreviatura: dep.type.abreviatura
-    };
+  const onChangeDependencia = (selectedOption) => {
+    if (selectedOption) {
+      const selectedDependencia = dependencias.find(
+        (item) => item.id === selectedOption.value
+      );
+      o.dependencia = {
+        id: selectedDependencia.id,
+        name: selectedDependencia.fullName,
+        abreviatura: selectedDependencia.type.abreviatura,
+      };
+      setSelectedDependencia(selectedOption);
+    }
   };
 
-  const onChangePersona = (event) => {
-    var per = personas.find((e) => o.persona.id == e.people.id);
-    o.persona = {
-      id: per.people.id,
-      apellidoNombre: per.people.fullName,
-      nroDocumento: per.people.code,
-      direccion: per.people.address,
-      email: per.people.mail,
-      celular: per.people.phone
-    };
+
+  const onChangePersona = (selectedOption) => {
+    if (selectedOption) {
+      const selectedPerson = personas.find(
+        (item) => item.people.id === selectedOption.value
+      );
+      o.persona = {
+        id: selectedPerson.people.id,
+        apellidoNombre: selectedPerson.people.fullName,
+        nroDocumento: selectedPerson.people.code,
+        direccion: selectedPerson.people.address,
+        email: selectedPerson.people.mail,
+        celular: selectedPerson.people.phone
+      };
+      setSelectedPersona(selectedOption);
+    }
   };
 
   const onClickSave = async () => {
@@ -167,7 +193,11 @@ export const Form = () => {
         });
       }
 
+
+
       var o2 = { ...o, dependencia: { id: o.dependencia.id }, persona: { id: o.persona.id }, fechaRegistro: fechaRegistro, horaEmision: horaEmision };
+
+
       http.post(process.env.REACT_APP_PATH + '/notificacion', o2).then(async (result) => {
         if (!o2._id) {
           if (result.id) {
@@ -280,36 +310,41 @@ export const Form = () => {
                 </Grid>
 
                 <Grid item xs={12} md={12}>
+                  <InputLabel variant="standard" sx={{ fontSize: '14px' }}>
+                    Seleccione la Dependencia: *
+                  </InputLabel>
                   <Select
                     required
-                    fullWidth
+                    isClearable
                     id="standard-name"
-                    label="Seleccione la Dependencia: "
-                    {...defaultProps("dependencia.id", { onChange: onChangeDependencia })}
-                  >
-                    {dependencias.map((item, i) => (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.fullName}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    placeholder="Seleccione la Dependencia: "
+                    options={dependencias.map((item) => ({
+                      value: item.id,
+                      label: item.fullName,
+                    }))}
+                    onChange={onChangeDependencia}
+                    value={selectedDependencia}
+                  />
                 </Grid>
 
                 <Grid item xs={12} md={12}>
+                  <InputLabel variant="standard" sx={{ fontSize: '14px' }}>
+                    Seleccione el Funcionario: *
+                  </InputLabel>
                   <Select
                     required
-                    fullWidth
+                    isClearable
                     id="standard-name"
-                    label="Seleccione el Funcionario: "
-                    {...defaultProps("persona.id", { onChange: onChangePersona })}
-                  >
-                    {personas.map((item, i) => (
-                      <MenuItem key={item.people.id} value={item.people.id}>
-                        {item.people.fullName}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    placeholder="Seleccione el Funcionario: "
+                    options={personas.map((item) => ({
+                      value: item.people.id,
+                      label: item.people.fullName,
+                    }))}
+                    onChange={onChangePersona}
+                    value={selectedPersona}
+                  />
                 </Grid>
+
 
                 <Grid item xs={12} md={9} sx={{ paddingTop: '0px !important' }}>
                   <TextField
